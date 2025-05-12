@@ -11,7 +11,7 @@ private:
     Vector2D vel_;
     Vector2D acc_;
     double mass_;
-    constexpr double G = 6.67430e-11;
+    constexpr static double G = 6.67430e-11;
 
 public:
 
