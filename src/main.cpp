@@ -10,8 +10,7 @@
 #include <vector>
 #include <stdexcept>
 #include <string>
-#include <sstream> 
-#include <cstddef>
+#include <sstream>
 
 int main(int argc, char* argv[])
 {
@@ -22,22 +21,27 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    // Open file and copy contents into vector<Body>:
-    std::ifstream in(argv[1]);
-    if (!in.is_open()) throw std::runtime_error("Input file could not be read");
+    // Open file, parse and copy contents into vector<Body>:
+    std::ifstream file(argv[1]);
+    if (!file.is_open()) throw std::runtime_error("Input file could not be read");
 
     std::vector<Body> bodies;
     std::string line;
 
-    while (std::getline(in, line)) 
+    while (std::getline(file, line)) 
     {
         // Skip comments or empty lines
         if (line.empty() || line[0] == '#') continue;
-    
-        std::istringstream iss(line);
-        double x, y, vx, vy, m;
-        if (iss >> x >> y >> vx >> vy >> m) bodies.emplace_back(Vector2D(x, y), Vector2D(vx, vy), m);
-        else std::cerr << "Malformed line: " << line << '\n';
+
+        std::stringstream ss(line);
+        std::string token;
+        std::vector<double> initial_conditions;
+
+        while (std::getline(ss, token, ',')) initial_conditions.push_back(std::stod(token));
+
+        if (initial_conditions.size() != 5) throw std::runtime_error("Input file was incorrectly read.");
+        
+        bodies.emplace_back(Vector2D(initial_conditions[0], initial_conditions[1]), Vector2D(initial_conditions[2], initial_conditions[3]), initial_conditions[4]);
     }
 
     // Set default values for simulation parameters:
@@ -53,7 +57,7 @@ int main(int argc, char* argv[])
     // Simulate problem:
     Simulation sim(bodies, std::move(integrator), T_start, T_end, dt);
 
-    sim.simulate("positions.csv");
+    sim.simulate("output.csv");
 
     return EXIT_SUCCESS;
 }

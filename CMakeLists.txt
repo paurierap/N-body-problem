@@ -46,7 +46,7 @@ target_link_libraries(nbody
 )
 
 # Copy input "bodies.txt" into the build directory
-configure_file(${CMAKE_SOURCE_DIR}/bodies.txt 
-    ${CMAKE_BINARY_DIR}/bodies.txt 
+configure_file(${CMAKE_SOURCE_DIR}/initial-conditions.csv 
+    ${CMAKE_BINARY_DIR}/initial-conditions.csv  
     COPYONLY
 )
