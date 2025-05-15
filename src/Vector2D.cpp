@@ -97,6 +97,6 @@ double Vector2D::operator[](int index) const {
 // Print vector formatted:
 std::ostream& operator<<(std::ostream& output, const Vector2D& vec)
 {
-    output << "(" << vec.x_ << ", " << vec.y_ << ")" << "\n";
+    output << "(" << vec.x_ << ", " << vec.y_ << ")";
     return output;
 }

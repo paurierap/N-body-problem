@@ -1,6 +1,7 @@
 // Body implementation
 
 #include "Body.hpp"
+#include "Vector2D.hpp"
 #include <cmath>
 
 // Constructors:
@@ -21,36 +22,52 @@ const Vector2D& Body::getVelocity() const
 {
     return vel_;
 }
-    
+
+const Vector2D& Body::getAcceleration() const
+{
+    return acc_;
+}
+
 double Body::getMass() const
 {
     return mass_;
 }
 
 
-// Update functions:
-void Body::resetAcceleration()
+// Setters:
+void Body::setPosition(const Vector2D& pos)
 {
-    for (int i = 0; i < 2; i++) acc_[i] = 0;
+    pos_ = pos;
 }
 
+void Body::setVelocity(const Vector2D& vel)
+{
+    vel_ = vel;
+}
+
+void Body::setAcceleration(const Vector2D& acc)
+{
+    acc_ = acc;
+}
+
+
+// Apply gravitational force from other body:
 void Body::applyForce(const Body& other_body)
 {
-    Vector2D F_vec(other_body.pos_ - pos_);
+    Vector2D r_vec{other_body.getPosition() - pos_};
     constexpr double eps = 1e-5; // Gravitational softening length to avoid r->0
-    double r = norm(F_vec) * norm(F_vec) + eps * eps;
+    double r = std::pow(norm(r_vec) * norm(r_vec) + eps * eps, 1.5);
     
-    double F_mag = G * other_body.mass_ * mass_ / std::sqrt(r * r * r);
-
-    acc_ += F_mag * F_vec;
+    acc_ += G * other_body.mass_ / r * r_vec;
 }
 
-void Body::updatePosition(double dt)
+double Body::KineticEnergy() const
 {
-    pos_ += dt * vel_;
+    double v = norm(vel_);
+    return 0.5 * mass_ * v * v;
 }
 
-void Body::updateVelocity(double dt)
+double Body::PotentialEnergy(const Body& other_body) const
 {
-    vel_ += dt * acc_;
+    return - G * mass_ * other_body.getMass() / norm(other_body.getPosition() - pos_);
 }

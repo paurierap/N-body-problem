@@ -16,9 +16,10 @@ target_include_directories(Vector2D_lib
 
 # Set SOURCES variable
 set(SOURCES
-    src/System.cpp
+    src/Simulation.cpp
     src/Body.cpp
     src/main.cpp
+    src/Recorder.cpp
 )
 # Also: file(GLOB SOURCES "*.cpp")
 
@@ -33,6 +34,7 @@ add_executable(nbody ${SOURCES})
 target_include_directories(nbody
     PRIVATE
         ${PROJECT_SOURCE_DIR}/include
+        ${PROJECT_SOURCE_DIR}/include/Integrator
 )
 target_compile_options(nbody 
     PRIVATE 
