@@ -23,22 +23,22 @@ set(SOURCES
 )
 # Also: file(GLOB SOURCES "*.cpp")
 
-# Set C++ standard
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED True)
-
 # Add SOURCES to build target nbody
 add_executable(nbody ${SOURCES})
+
+# Compile features and flags:
+target_compile_features(nbody PRIVATE cxx_std_20)
+target_compile_features(Vector2D_lib PRIVATE cxx_std_20)
+target_compile_options(nbody 
+    PRIVATE 
+        -Wall -Wextra -pedantic
+)
 
 # Include directories using -I compilation flag
 target_include_directories(nbody
     PRIVATE
         ${PROJECT_SOURCE_DIR}/include
         ${PROJECT_SOURCE_DIR}/include/Integrator
-)
-target_compile_options(nbody 
-    PRIVATE 
-        -Wall -Wextra -pedantic
 )
 target_link_libraries(nbody
     PRIVATE

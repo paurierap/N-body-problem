@@ -4,11 +4,12 @@
 #include "Integrator.hpp"
 #include "Body.hpp"
 #include <vector>
+#include <string>
 
 class VerletIntegrator : public Integrator
 {
 public:
-    virtual void integrate(std::vector<Body>& bodies, double dt) override
+    virtual void integrate(std::vector<Body>& bodies, double dt) override final
     {
         std::vector<Vector2D> acc_old;
         acc_old.reserve(bodies.size());
@@ -16,7 +17,7 @@ public:
         // Step 1: Reset and compute a(t)
         for (auto& body : bodies)
         {
-            body.setAcceleration(Vector2D(0.0, 0.0));
+            body.setAcceleration(Vector2D());
         }
 
         for (std::size_t i = 0; i < bodies.size(); ++i) 
@@ -31,14 +32,14 @@ public:
         // Step 2: Save a(t), update x(t + dt)
         for (auto& body : bodies) 
         {
-            acc_old.push_back(body.getAcceleration());
+            acc_old.emplace_back(body.getAcceleration());
             body.setPosition(body.getPosition() + body.getVelocity() * dt + 0.5 * body.getAcceleration() * dt * dt);
         }
 
         // Step 3: Reset and compute a(t + dt)
         for (auto& body : bodies)
         {
-            body.setAcceleration(Vector2D(0.0, 0.0));
+            body.setAcceleration(Vector2D());
         }
 
         for (std::size_t i = 0; i < bodies.size(); ++i) 
@@ -55,6 +56,11 @@ public:
         {
             bodies[i].setVelocity(bodies[i].getVelocity() + 0.5 * dt * (acc_old[i] + bodies[i].getAcceleration()));
         }
+    }
+
+    virtual std::string name() const noexcept override final
+    {
+        return "Verlet";
     }
 };
 
