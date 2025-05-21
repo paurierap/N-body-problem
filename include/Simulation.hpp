@@ -17,14 +17,14 @@ class Simulation {
 private:
     std::vector<Body> bodies_;
     IntegratorPtr integrator_ {std::make_unique<VerletIntegrator>()};
-    double tStart = 0;
-    double tEnd = 1;
-    double dt_ = 1e-4;
+    double tStart;
+    double tEnd;
+    double dt_;
     std::size_t numSteps;
-    static constexpr std::size_t maxSteps = 1e5;
+    static constexpr std::size_t maxSteps = 100000;
 
 public:
-    Simulation(std::vector<Body>, IntegratorPtr, double, double, double);
+    Simulation(std::vector<Body>, IntegratorPtr, double = 0, double = 1, double = 1e-4);
     void simulate(const std::string& = "output.csv");
     void setIntegrator(IntegratorPtr newIntegrator);
 };
